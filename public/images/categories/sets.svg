@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2980B9"/>
+      <stop offset="100%" style="stop-color:#3498DB"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg)"/>
+  <!-- Waves -->
+  <path d="M0,310 Q150,270 300,310 T600,310 L600,400 L0,400 Z" fill="rgba(255,255,255,0.06)"/>
+  <path d="M0,350 Q150,310 300,350 T600,350 L600,400 L0,400 Z" fill="rgba(255,255,255,0.06)"/>
+  <!-- Gift box / set icon -->
+  <g transform="translate(300, 145)" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2.5">
+    <!-- Box -->
+    <rect x="-35" y="-5" width="70" height="50" rx="3"/>
+    <!-- Lid -->
+    <rect x="-40" y="-15" width="80" height="15" rx="3"/>
+    <!-- Ribbon vertical -->
+    <line x1="0" y1="-15" x2="0" y2="45"/>
+    <!-- Ribbon horizontal -->
+    <line x1="-40" y1="-7" x2="40" y2="-7"/>
+    <!-- Bow -->
+    <path d="M0,-15 Q-15,-30 -5,-35 Q0,-30 0,-15"/>
+    <path d="M0,-15 Q15,-30 5,-35 Q0,-30 0,-15"/>
+  </g>
+  <!-- Label -->
+  <text x="300" y="260" text-anchor="middle" fill="white" font-size="36" font-family="sans-serif" font-weight="bold" dy=".3em">Sets</text>
+  <circle cx="70" cy="50" r="20" fill="rgba(255,255,255,0.04)"/>
+  <circle cx="530" cy="360" r="28" fill="rgba(255,255,255,0.03)"/>
+</svg>

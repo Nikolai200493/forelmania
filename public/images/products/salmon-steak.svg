@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0C4260"/>
+      <stop offset="100%" style="stop-color:#1C7E7E"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <path d="M0,300 Q100,270 200,300 T400,300 L400,400 L0,400 Z" fill="rgba(255,255,255,0.05)"/>
+  <path d="M0,340 Q100,310 200,340 T400,340 L400,400 L0,400 Z" fill="rgba(255,255,255,0.05)"/>
+  <!-- Steak cross-section icon -->
+  <g transform="translate(200, 148)" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2.5">
+    <ellipse cx="0" cy="0" rx="35" ry="30"/>
+    <ellipse cx="0" cy="0" rx="20" ry="16"/>
+    <line x1="0" y1="-30" x2="0" y2="-16"/>
+  </g>
+  <text x="200" y="240" text-anchor="middle" fill="white" font-size="22" font-family="sans-serif" font-weight="bold" dy=".3em">Salmon Steak</text>
+  <text x="200" y="270" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="14" font-family="sans-serif" dy=".3em">Center Cut</text>
+</svg>
