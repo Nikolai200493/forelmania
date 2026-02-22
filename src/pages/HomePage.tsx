@@ -3,6 +3,7 @@ import { categories } from '../data/categories';
 import { products } from '../data/products';
 import { reviews } from '../data/reviews';
 import ProductCard from '../components/ProductCard';
+import { AnimatedMarqueeHero } from '@/components/ui/hero-marquee';
 
 const popularProducts = products.filter((p) => p.badge === 'hit').slice(0, 4);
 
@@ -78,28 +79,18 @@ export default function HomePage() {
   return (
     <main>
       {/* Hero Banner */}
-      <section
-        className="min-h-[550px] max-md:min-h-[400px] max-xs:min-h-[350px] flex items-center bg-cover bg-center text-white py-20 max-md:py-16"
-        style={{
-          backgroundImage:
-            'linear-gradient(135deg, rgba(11,61,92,0.85) 0%, rgba(26,122,122,0.7) 100%), url(/images/hero-bg.svg)',
-        }}
-      >
-        <div className="w-full max-w-[1280px] mx-auto px-6">
-          <h1 className="text-5xl max-md:text-[2rem] max-xs:text-2xl text-white mb-4 max-w-[600px] leading-tight">
-            Свежие морепродукты с доставкой на дом
-          </h1>
-          <p className="text-lg opacity-90 max-w-[500px] mb-8 leading-relaxed">
-            Лосось, креветки, крабы, икра и другие деликатесы. Доставляем в термобоксах для сохранения свежести.
-          </p>
-          <Link
-            to="/catalog"
-            className="inline-flex items-center justify-center gap-2 px-9 py-4 font-heading text-base font-semibold rounded-lg bg-accent text-white border-2 border-accent hover:bg-accent-hover hover:border-accent-hover transition-all duration-300"
-          >
-            Смотреть каталог
-          </Link>
-        </div>
-      </section>
+      <AnimatedMarqueeHero
+        title={
+          <>
+            Свежие морепродукты
+            <br />
+            <span className="text-secondary">с доставкой на дом</span>
+          </>
+        }
+        description="Лосось, креветки, крабы, икра и другие деликатесы. Доставляем в термобоксах для сохранения свежести."
+        ctaText="Смотреть каталог"
+        ctaLink="/catalog"
+      />
 
       {/* Categories */}
       <section className="py-20">

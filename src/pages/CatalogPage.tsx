@@ -14,7 +14,7 @@ const sortLabels: Record<SortOption, string> = {
 };
 
 export default function CatalogPage() {
-  const { categorySlug } = useParams<{ categorySlug: string }>();
+  const { categorySlug, subcategorySlug } = useParams<{ categorySlug: string; subcategorySlug: string }>();
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
 
@@ -25,11 +25,21 @@ export default function CatalogPage() {
     [categorySlug],
   );
 
+  const activeSubcategory = useMemo(
+    () =>
+      activeCategory?.subcategories?.find((s) => s.slug === subcategorySlug) ?? null,
+    [activeCategory, subcategorySlug],
+  );
+
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
     if (activeCategory) {
       result = result.filter((p) => p.categoryId === activeCategory.id);
+    }
+
+    if (activeSubcategory) {
+      result = result.filter((p) => p.subcategoryId === activeSubcategory.id);
     }
 
     if (searchQuery) {
@@ -60,7 +70,7 @@ export default function CatalogPage() {
     }
 
     return result;
-  }, [activeCategory, searchQuery, sortBy]);
+  }, [activeCategory, activeSubcategory, searchQuery, sortBy]);
 
   return (
     <main>
@@ -84,7 +94,18 @@ export default function CatalogPage() {
             </li>
             {activeCategory && (
               <li className="breadcrumb-separator">
-                <span className="text-text-main">{activeCategory.name}</span>
+                {activeSubcategory ? (
+                  <Link to={`/catalog/${activeCategory.slug}`} className="text-text-light hover:text-secondary transition-colors">
+                    {activeCategory.name}
+                  </Link>
+                ) : (
+                  <span className="text-text-main">{activeCategory.name}</span>
+                )}
+              </li>
+            )}
+            {activeSubcategory && (
+              <li className="breadcrumb-separator">
+                <span className="text-text-main">{activeSubcategory.name}</span>
               </li>
             )}
           </ul>
@@ -93,7 +114,7 @@ export default function CatalogPage() {
 
       <div className="w-full max-w-[1280px] mx-auto px-6">
         <h1 className="text-3xl mb-8">
-          {activeCategory ? activeCategory.name : 'Каталог'}
+          {activeSubcategory ? activeSubcategory.name : activeCategory ? activeCategory.name : 'Каталог'}
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-8 pb-20">
@@ -134,7 +155,12 @@ export default function CatalogPage() {
                           <li key={sub.id}>
                             <Link
                               to={`/catalog/${category.slug}/${sub.slug}`}
-                              className="block px-4 py-1.5 text-sm text-text-light rounded-lg hover:text-secondary transition-colors"
+                              className={clsx(
+                                'block px-4 py-1.5 text-sm rounded-lg transition-colors',
+                                activeSubcategory?.id === sub.id
+                                  ? 'text-secondary font-semibold'
+                                  : 'text-text-light hover:text-secondary'
+                              )}
                             >
                               {sub.name}
                             </Link>
