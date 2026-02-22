@@ -66,6 +66,33 @@ export interface Review {
   date: string;
 }
 
+/** Данные формы оформления заказа */
+export interface OrderFormData {
+  name: string;
+  phone: string;
+  email?: string;
+  address: string;
+  deliveryDate: string;
+  deliveryTime: string;
+  comment?: string;
+}
+
+/** Элемент заказа (для отправки на сервер) */
+export interface OrderItem {
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  weight: string;
+}
+
+/** Полный payload заказа */
+export interface OrderPayload {
+  customer: OrderFormData;
+  items: OrderItem[];
+  totalPrice: number;
+}
+
 /** Настройки сайта */
 export interface SiteConfig {
   name: string;

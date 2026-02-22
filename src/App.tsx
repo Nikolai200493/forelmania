@@ -10,6 +10,8 @@ import DeliveryPage from './pages/DeliveryPage';
 import ContactsPage from './pages/ContactsPage';
 import ArticlesPage from './pages/ArticlesPage';
 import ArticlePage from './pages/ArticlePage';
+import CheckoutPage from './pages/CheckoutPage';
+import OrderSuccessPage from './pages/OrderSuccessPage';
 import ScrollToTop from './components/ScrollToTop';
 
 export default function App() {
@@ -29,6 +31,8 @@ export default function App() {
             <Route path="/contacts" element={<ContactsPage />} />
             <Route path="/articles" element={<ArticlesPage />} />
             <Route path="/articles/:slug" element={<ArticlePage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/order-success" element={<OrderSuccessPage />} />
           </Routes>
         </main>
         <Footer />

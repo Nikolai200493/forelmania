@@ -113,9 +113,13 @@ export default function CartDrawer() {
                 <span className="font-semibold">Итого:</span>
                 <span className="font-heading text-xl font-extrabold text-primary">{formatPrice(totalPrice)}</span>
               </div>
-              <button className="w-full inline-flex items-center justify-center gap-2 px-7 py-3 font-heading text-[0.9375rem] font-semibold rounded-lg bg-accent text-white border-2 border-accent hover:bg-accent-hover hover:border-accent-hover transition-all duration-300 cursor-pointer">
+              <Link
+                to="/checkout"
+                onClick={closeCart}
+                className="w-full inline-flex items-center justify-center gap-2 px-7 py-3 font-heading text-[0.9375rem] font-semibold rounded-lg bg-accent text-white border-2 border-accent hover:bg-accent-hover hover:border-accent-hover transition-all duration-300 cursor-pointer"
+              >
                 Оформить заказ
-              </button>
+              </Link>
               <button
                 className="w-full inline-flex items-center justify-center gap-2 px-7 py-3 font-heading text-[0.9375rem] font-semibold rounded-lg bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer"
                 onClick={closeCart}
