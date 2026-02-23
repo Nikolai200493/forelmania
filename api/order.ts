@@ -67,9 +67,11 @@ async function sendTelegramMessage(orderId: string, payload: OrderPayload) {
     `📦 *Товары:*`,
     ...items.map(
       (item) =>
-        `• ${item.name} (${item.weight}) × ${item.quantity} — ${(item.price * item.quantity).toLocaleString("ru-RU")} ₽`,
+        `• ${item.name} (${item.weight})` +
+        `\n   ${item.price.toLocaleString("ru-RU")} ₽ × ${item.quantity} шт. = *${(item.price * item.quantity).toLocaleString("ru-RU")} ₽*`,
     ),
     ``,
+    `━━━━━━━━━━━━━━━`,
     `💰 *Итого: ${totalPrice.toLocaleString("ru-RU")} ₽*`,
   ]
     .filter(Boolean)
@@ -123,8 +125,11 @@ async function appendToGoogleSheets(
   const dateStr = now.toLocaleString("ru-RU", { timeZone: "Europe/Moscow" });
 
   const itemsList = items
-    .map((item) => `${item.name} (${item.weight}) ×${item.quantity}`)
-    .join("; ");
+    .map(
+      (item) =>
+        `${item.name} (${item.weight}) — ${item.price.toLocaleString("ru-RU")} ₽ × ${item.quantity} шт. = ${(item.price * item.quantity).toLocaleString("ru-RU")} ₽`,
+    )
+    .join("\n");
 
   try {
     await sheets.spreadsheets.values.append({
