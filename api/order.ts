@@ -64,6 +64,8 @@ async function sendTelegramMessage(orderId: string, payload: OrderPayload) {
     ``,
     `━━━━━━━━━━━━━━━`,
     `💰 *Итого: ${totalPrice.toLocaleString("ru-RU")} ₽*`,
+    ``,
+    `📋 [Открыть таблицу заказов](https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEETS_ID})`,
   ]
     .filter(Boolean)
     .join("\n");
