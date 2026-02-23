@@ -109,6 +109,15 @@ async function appendToGoogleSheets(
 
   const sheets = google.sheets({ version: "v4", auth });
 
+  // Get the actual name of the first sheet
+  const spreadsheet = await sheets.spreadsheets.get({
+    spreadsheetId: sheetId,
+    fields: "sheets.properties.title",
+  });
+  const firstSheetTitle =
+    spreadsheet.data.sheets?.[0]?.properties?.title ?? "Sheet1";
+  console.log(`Google Sheets: using sheet "${firstSheetTitle}"`);
+
   const { customer, items, totalPrice } = payload;
   const now = new Date();
   const dateStr = now.toLocaleString("ru-RU", { timeZone: "Europe/Moscow" });
@@ -117,26 +126,34 @@ async function appendToGoogleSheets(
     .map((item) => `${item.name} (${item.weight}) ×${item.quantity}`)
     .join("; ");
 
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: sheetId,
-    range: "A:I",
-    valueInputOption: "USER_ENTERED",
-    requestBody: {
-      values: [
-        [
-          orderId,
-          dateStr,
-          customer.name,
-          customer.phone,
-          customer.email || "—",
-          customer.address,
-          itemsList,
-          `${totalPrice.toLocaleString("ru-RU")} ₽`,
-          "Новый",
+  try {
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+      range: `'${firstSheetTitle}'!A:I`,
+      valueInputOption: "USER_ENTERED",
+      requestBody: {
+        values: [
+          [
+            orderId,
+            dateStr,
+            customer.name,
+            customer.phone,
+            customer.email || "—",
+            customer.address,
+            itemsList,
+            `${totalPrice.toLocaleString("ru-RU")} ₽`,
+            "Новый",
+          ],
         ],
-      ],
-    },
-  });
+      },
+    });
+    console.log("Google Sheets: row appended successfully");
+  } catch (sheetError: unknown) {
+    const errMsg =
+      sheetError instanceof Error ? sheetError.message : String(sheetError);
+    console.error("Google Sheets append error:", errMsg);
+    throw sheetError;
+  }
 }
 
 export default async function handler(
