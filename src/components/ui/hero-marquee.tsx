@@ -81,7 +81,26 @@ export const AnimatedMarqueeHero: React.FC<AnimatedMarqueeHeroProps> = ({
         className,
       )}
     >
-      {/* Floating Parallax Images */}
+      {/* Mobile Background — grid of seafood images */}
+      <div className="absolute inset-0 md:hidden">
+        <div className="grid grid-cols-2 grid-rows-3 gap-2 p-3 h-full">
+          {FLOATING_IMAGES.slice(0, 6).map((img, i) => (
+            <motion.img
+              key={i}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              src={img.url}
+              alt={img.alt}
+              className="w-full h-full object-cover rounded-xl"
+            />
+          ))}
+        </div>
+        {/* Overlay to keep text readable */}
+        <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]" />
+      </div>
+
+      {/* Floating Parallax Images — desktop only */}
       <Floating sensitivity={-1} className="overflow-hidden hidden md:block">
         {/* Top-left */}
         <FloatingElement depth={0.5} className="top-[4%] left-[5%]">
