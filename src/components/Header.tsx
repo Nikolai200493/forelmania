@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { categories } from '../data/categories';
 import { siteConfig } from '../data/config';
 import { useCart } from '../context/CartContext';
+import Logo from './Logo';
 
 function Header() {
   const [isSticky, setIsSticky] = useState(false);
@@ -72,25 +73,7 @@ function Header() {
       >
         <div className="w-full max-w-[1280px] mx-auto px-6 flex items-center justify-between h-[72px]">
           {/* Logo */}
-          <Link to="/" className="flex flex-col items-center gap-0.5 shrink-0" aria-label="На главную">
-            <span className="font-heading text-2xl font-extrabold text-primary tracking-wider">FORELMANIA</span>
-            <svg
-              className="text-secondary block"
-              viewBox="0 0 120 12"
-              width="120"
-              height="12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M0 6 C20 0, 40 12, 60 6 C80 0, 100 12, 120 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </Link>
+          <Logo variant="header" />
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1" aria-label="Основная навигация">

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { siteConfig } from '../data/config';
 import { categories } from '../data/categories';
+import Logo from './Logo';
 
 export default function Footer() {
   return (
@@ -8,7 +9,9 @@ export default function Footer() {
       <div className="w-full max-w-[1280px] mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr] gap-10">
           <div>
-            <div className="font-heading text-2xl font-extrabold text-white tracking-wider mb-4">FORELMANIA</div>
+            <div className="mb-4">
+              <Logo variant="footer" />
+            </div>
             <p className="text-sm leading-relaxed mb-5">
               Свежие морепродукты с доставкой на дом. Мы тщательно отбираем лучшие продукты моря для вашего стола.
             </p>
