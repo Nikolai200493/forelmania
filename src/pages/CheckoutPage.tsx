@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useToast } from "../context/ToastContext";
 import type { OrderFormData, OrderPayload } from "../data/types";
 
 const DELIVERY_TIMES = [
@@ -19,6 +20,7 @@ function getTomorrowDate(): string {
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
+  const { addToast } = useToast();
 
   const [form, setForm] = useState<OrderFormData>({
     name: "",
@@ -108,12 +110,14 @@ export default function CheckoutPage() {
         throw new Error(data.error || "Ошибка сервера");
       }
 
+      addToast("success", `Заказ ${data.orderId} успешно оформлен! Мы скоро с вами свяжемся.`);
       clearCart();
       navigate(`/order-success?orderId=${data.orderId}`);
     } catch (err) {
-      setSubmitError(
-        err instanceof Error ? err.message : "Произошла ошибка. Попробуйте ещё раз.",
-      );
+      const errorMsg =
+        err instanceof Error ? err.message : "Произошла ошибка. Попробуйте ещё раз.";
+      setSubmitError(errorMsg);
+      addToast("error", errorMsg);
     } finally {
       setIsSubmitting(false);
     }
