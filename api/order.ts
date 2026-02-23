@@ -34,15 +34,6 @@ function generateOrderId(): string {
   return `FM-${date}-${random}`;
 }
 
-function formatItemsList(items: OrderItem[]): string {
-  return items
-    .map(
-      (item) =>
-        `${item.name} (${item.weight}) × ${item.quantity} = ${(item.price * item.quantity).toLocaleString("ru-RU")} ₽`,
-    )
-    .join("\n");
-}
-
 async function sendTelegramMessage(orderId: string, payload: OrderPayload) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
