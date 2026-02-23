@@ -1,20 +1,84 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { siteConfig } from '../data/config';
+import { useToast } from '../context/ToastContext';
 
 export default function ContactsPage() {
+  const { addToast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
+    phone: '',
     email: '',
     message: '',
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setFormData({ name: '', email: '', message: '' });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
   };
+
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.name.trim()) newErrors.name = "Введите ваше имя";
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Введите номер телефона";
+    } else if (!/^[\d\s\+\-\(\)]{7,18}$/.test(formData.phone.trim())) {
+      newErrors.phone = "Некорректный номер телефона";
+    }
+    if (!formData.message.trim()) newErrors.message = "Введите сообщение";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email || undefined,
+          message: formData.message,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Ошибка сервера");
+      }
+
+      addToast("success", "Сообщение отправлено! Мы скоро с вами свяжемся.");
+      setSubmitted(true);
+      setFormData({ name: '', phone: '', email: '', message: '' });
+      setErrors({});
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Произошла ошибка. Попробуйте ещё раз.";
+      addToast("error", errorMsg);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const inputClass = (field: string) =>
+    `w-full px-4 py-3 border rounded-lg text-[0.9375rem] transition-all focus:outline-none focus:ring-2 focus:ring-secondary/20 ${
+      errors[field]
+        ? "border-accent focus:border-accent"
+        : "border-border focus:border-secondary"
+    }`;
 
   return (
     <div className="pb-20">
@@ -103,46 +167,62 @@ export default function ContactsPage() {
             ) : (
               <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-primary mb-1.5">Ваше имя</label>
+                  <label htmlFor="name" className="block text-sm font-semibold text-primary mb-1.5">Ваше имя *</label>
                   <input
                     type="text"
                     id="name"
+                    name="name"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
+                    onChange={handleChange}
                     placeholder="Иван Иванов"
-                    className="w-full px-4 py-3 border border-border rounded-lg text-[0.9375rem] focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
+                    className={inputClass("name")}
                   />
+                  {errors.name && <p className="text-xs text-accent mt-1">{errors.name}</p>}
+                </div>
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-semibold text-primary mb-1.5">Телефон *</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+7 (999) 123-45-67"
+                    className={inputClass("phone")}
+                  />
+                  {errors.phone && <p className="text-xs text-accent mt-1">{errors.phone}</p>}
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-sm font-semibold text-primary mb-1.5">Email</label>
                   <input
                     type="email"
                     id="email"
+                    name="email"
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                    placeholder="ivan@example.com"
-                    className="w-full px-4 py-3 border border-border rounded-lg text-[0.9375rem] focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
+                    onChange={handleChange}
+                    placeholder="ivan@example.com (необязательно)"
+                    className={inputClass("email")}
                   />
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-primary mb-1.5">Сообщение</label>
+                  <label htmlFor="message" className="block text-sm font-semibold text-primary mb-1.5">Сообщение *</label>
                   <textarea
                     id="message"
+                    name="message"
                     rows={5}
                     value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    required
+                    onChange={handleChange}
                     placeholder="Ваш вопрос..."
-                    className="w-full px-4 py-3 border border-border rounded-lg text-[0.9375rem] resize-y focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all"
+                    className={`${inputClass("message")} resize-y`}
                   />
+                  {errors.message && <p className="text-xs text-accent mt-1">{errors.message}</p>}
                 </div>
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-3 font-heading text-[0.9375rem] font-semibold rounded-lg bg-accent text-white border-2 border-accent hover:bg-accent-hover hover:border-accent-hover transition-all duration-300 cursor-pointer"
+                  disabled={isSubmitting}
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3 font-heading text-[0.9375rem] font-semibold rounded-lg bg-accent text-white border-2 border-accent hover:bg-accent-hover hover:border-accent-hover transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Отправить
+                  {isSubmitting ? "Отправка..." : "Отправить"}
                 </button>
               </form>
             )}
